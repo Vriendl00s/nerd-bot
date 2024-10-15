@@ -7,7 +7,7 @@ from db_connection import db_conn
 from standardutils.reply import reply
 from standardutils.parsed_time import parsed_time
 
-async def check_admin(ctx, user=None):
+async def check_admin(ctx, user=None, action=None):
     try:
         author = ctx.author
     except AttributeError:
@@ -15,21 +15,23 @@ async def check_admin(ctx, user=None):
     
     try:
         if author.top_role <= user.top_role:
-            await reply(ctx, "You cannot ban this user since they have a higher role than you.")
-            return
+            await reply(ctx, f"You cannot {action} this user since they have a higher role than you.")
+            return False
     except:
         pass
     
     if author.guild_permissions.administrator is False:
-        await reply(ctx, "You do not have permission to ban users.")
-        return
+        await reply(ctx, f"You do not have permission to {action} users.")
+        return False
 
     return author
 
 
 async def ban(ctx, user, length=None, reason=None):
     
-    author = await check_admin(ctx, user)
+    author = await check_admin(ctx, user, 'ban')
+    if author == False:
+        return
 
     if reason is None:
         reason = "No reason provided."
@@ -66,7 +68,9 @@ async def ban(ctx, user, length=None, reason=None):
 
 async def unban(ctx, user):
 
-    author = await check_admin(ctx, user)
+    author = await check_admin(ctx, user, 'unban')
+    if author == False:
+        return
     """Unban a user from the server."""
     await ctx.guild.unban(user)
 
@@ -95,7 +99,9 @@ async def unban(ctx, user):
 
 async def kick(ctx, user, reason=None):
 
-    author = await check_admin(ctx, user)
+    author = await check_admin(ctx, user, 'kick')
+    if author == False:
+        return
     """Kick a user from the server."""
     if reason is None:
         reason = "No reason provided."
@@ -106,7 +112,9 @@ async def kick(ctx, user, reason=None):
 
 async def mute(ctx, user, length=None, reason=None):
 
-    author = await check_admin(ctx, user)
+    author = await check_admin(ctx, user, 'mute')
+    if author == False:
+        return
     """Mute a user in the server."""
     if reason is None:
         reason = "No reason provided."
@@ -144,7 +152,9 @@ async def mute(ctx, user, length=None, reason=None):
 
 async def unmute(ctx, user):
 
-    author = await check_admin(ctx, user)
+    author = await check_admin(ctx, user, 'unmute')
+    if author == False:
+        return
     """Unmute a user in the server."""
 
     query = f"""
@@ -168,7 +178,9 @@ async def unmute(ctx, user):
 
 async def warn(ctx, user, reason=None):
 
-    author = await check_admin(ctx, user)
+    author = await check_admin(ctx, user, 'warn')
+    if author == False:
+        return
     """Warn a user in the server."""
     if reason is None:
         reason = "No reason provided."
@@ -182,7 +194,9 @@ async def warn(ctx, user, reason=None):
 
 async def clear(ctx, amount=5):
     
-    author = await check_admin(ctx)
+    author = await check_admin(ctx, None, 'clear')
+    if author == False:
+        return
     try:
         await ctx.response.defer()
     except:
