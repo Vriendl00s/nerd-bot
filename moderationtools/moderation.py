@@ -1,24 +1,23 @@
 import discord
-from discord.ext import commands
-import json
-import sqlite3
-from datetime import datetime, timedelta
+from datetime import datetime
 from db_connection import db_conn 
 from standardutils.reply import reply
 from standardutils.parsed_time import parsed_time
 
-async def check_admin(ctx, user=None, action=None):
+async def check_admin(ctx, target=None, action=None):
+    """Check if the user has the necessary permissions to perform the action."""
+
+    # redundancy for slash commands
     try:
         author = ctx.author
     except AttributeError:
         author = ctx.user
     
-    try:
-        if author.top_role <= user.top_role:
+    # make sure not to give an error if the command doesn't have a target user
+    if target is not None:
+        if author.top_role <= target.top_role:
             await reply(ctx, f"You cannot {action} this user since they have a higher role than you.")
             return False
-    except:
-        pass
     
     if author.guild_permissions.administrator is False:
         await reply(ctx, f"You do not have permission to {action} users.")

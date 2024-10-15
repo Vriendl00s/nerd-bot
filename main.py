@@ -5,6 +5,8 @@ from moderationtools import moderation
 from discord import app_commands
 
 intents = discord.Intents.default()
+intents.members = True
+intents.presences = True
 intents.message_content = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
@@ -13,8 +15,11 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 @bot.event
 async def on_ready():
     print('syncing commands...')
-    await bot.tree.sync()
+    # await bot.tree.sync()
     print('commands synced')
+    print('loading cogs...')
+    await bot.load_extension('cogs.background_tasks')
+    print('cogs loaded')
     print(f'We have logged in as {bot.user}')
 
 @bot.tree.command(name="ban", description="Ban a user")
