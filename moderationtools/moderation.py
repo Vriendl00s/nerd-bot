@@ -45,7 +45,7 @@ async def ban(ctx, user, length=None, reason=None):
         length = datetime.now() + length
 
         query = f"""
-        INSERT INTO moderation (UID, server_id, type, until, reason) 
+        INSERT INTO moderation (user_id, server_id, type, until, reason) 
         VALUES ({user.id}, {ctx.guild.id}, 'BAN', '{length}', '{reason}')
         """
 
@@ -76,7 +76,7 @@ async def unban(ctx, user):
 
     query = f"""
     SELECT * FROM moderation 
-    WHERE UID = {user.id} 
+    WHERE user_id = {user.id} 
     AND server_id = {ctx.guild.id} 
     AND type = 'BAN'
     """
@@ -86,7 +86,7 @@ async def unban(ctx, user):
 
         query = f"""
         DELETE FROM moderation 
-        WHERE UID = {user.id} 
+        WHERE user_id = {user.id} 
         AND server_id = {ctx.guild.id} 
         AND type = 'BAN'
         """
@@ -127,7 +127,7 @@ async def mute(ctx, user, length=None, reason=None):
         length = datetime.now() + length
 
         query = f"""
-        INSERT INTO moderation (UID, server_id, type, until, reason) 
+        INSERT INTO moderation (user_id, server_id, type, until, reason) 
         VALUES ({user.id}, {ctx.guild.id}, 'MUTE', '{length}', '{reason}')
         """
 
@@ -159,7 +159,7 @@ async def unmute(ctx, user):
 
     query = f"""
     DELETE FROM moderation 
-    WHERE UID = {user.id} 
+    WHERE user_id = {user.id} 
     AND server_id = {ctx.guild.id} 
     AND type = 'MUTE'
     """
@@ -185,7 +185,7 @@ async def warn(ctx, user, reason=None):
     if reason is None:
         reason = "No reason provided."
     
-    query = f'INSERT INTO moderation (UID, server_id, type, until, reason) VALUES ({user.id}, {ctx.guild.id}, "WARN", "None", "{reason}")'
+    query = f'INSERT INTO moderation (user_id, server_id, type, until, reason) VALUES ({user.id}, {ctx.guild.id}, "WARN", "None", "{reason}")'
     db_conn(query, commit=True)
 
     await reply(ctx, f"Warned {user.name} | {reason}.")
