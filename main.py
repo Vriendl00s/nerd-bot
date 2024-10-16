@@ -4,6 +4,7 @@ from discord.ext import commands
 from moderationtools import moderation
 from discord import app_commands
 from randomcommands.check_online import register_online
+from randomcommands.remindme import remindme_save
 
 intents = discord.Intents.default()
 intents.members = True
@@ -16,7 +17,7 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 @bot.event
 async def on_ready():
     print('syncing commands...')
-    # await bot.tree.sync()
+    await bot.tree.sync()
     print('commands synced')
     print('loading cogs...')
     await bot.load_extension('cogs.background_tasks')
@@ -99,8 +100,21 @@ async def slash_command(interaction: discord.Interaction, amount: int = 5):
 async def clear(ctx, amount=5):
     await moderation.clear(ctx, amount)
 
+@bot.tree.command(name="check_online", description="Makes a channel to display the number of online users")
+async def slash_command(interaction: discord.Interaction):
+    await register_online(interaction)
+
 @bot.command()
 async def check_online(ctx):
     await register_online(ctx)
+
+@bot.tree.command(name="remindme", description="Remind me")
+@app_commands.describe(message="The message to remind you", time_until="The time until the reminder")
+async def slash_command(interaction: discord.Interaction, message: str, time_until: str):
+    await remindme_save(interaction, message, time_until)
+
+@bot.command()
+async def remindme(ctx, message, time_until):
+    await remindme_save(ctx, message, time_until)
 
 bot.run(token)

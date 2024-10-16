@@ -11,6 +11,9 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS moderation
 cursor.execute('''CREATE TABLE IF NOT EXISTS online_channel
                (channel_id INTEGER NOT NULL, guild_id INTEGER NOT NULL)''')
 
+cursor.execute('''CREATE TABLE IF NOT EXISTS reminders
+               (user_id INTEGER NOT NULL, message TEXT NOT NULL, time TEXT NOT NULL)''')
+
 conn.close()
 
 # clear_db = "DELETE FROM moderation"

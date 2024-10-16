@@ -1,15 +1,22 @@
 import discord
 from discord.ext import commands, tasks
 from db_connection import db_conn
+from randomcommands.remindme import remindme_send
 
 class BackgroundTasks(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
         self.check_users.start()
+        self.send_remindme.start()
 
     def cog_unload(self) -> None:
         self.check_users.stop()
+        self.send_remindme.stop()
+
+    @tasks.loop(seconds=60)
+    async def send_remindme(self):
+        await remindme_send(self.bot)
         
     # Check the status of all users in all guilds every 5 minutes
     @tasks.loop(seconds=300)
