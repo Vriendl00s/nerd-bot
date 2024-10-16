@@ -3,6 +3,7 @@ from botToken import token
 from discord.ext import commands
 from moderationtools import moderation
 from discord import app_commands
+from randomcommands.check_online import register_online
 
 intents = discord.Intents.default()
 intents.members = True
@@ -97,5 +98,9 @@ async def slash_command(interaction: discord.Interaction, amount: int = 5):
 @bot.command()
 async def clear(ctx, amount=5):
     await moderation.clear(ctx, amount)
+
+@bot.command()
+async def check_online(ctx):
+    await register_online(ctx)
 
 bot.run(token)

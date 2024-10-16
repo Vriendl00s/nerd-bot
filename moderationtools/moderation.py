@@ -192,7 +192,8 @@ async def warn(ctx, user, reason=None):
 
 
 async def clear(ctx, amount=5):
-    
+    """Clear a certain amount of messages in the channel."""
+
     author = await check_admin(ctx, None, 'clear')
     if author == False:
         return

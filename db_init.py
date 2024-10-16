@@ -8,6 +8,8 @@ cursor = conn.cursor()
 cursor.execute('''CREATE TABLE IF NOT EXISTS moderation
                (user_id INTEGER NOT NULL, server_id INTEGER NOT NULL, type TEXT NOT NULL, until TEXT, reason TEXT NOT NULL)''')
 
+cursor.execute('''CREATE TABLE IF NOT EXISTS online_channel
+               (channel_id INTEGER NOT NULL, guild_id INTEGER NOT NULL)''')
 
 conn.close()
 

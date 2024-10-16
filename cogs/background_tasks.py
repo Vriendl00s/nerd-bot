@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands, tasks
+from db_connection import db_conn
 
 class BackgroundTasks(commands.Cog):
 
@@ -13,26 +14,27 @@ class BackgroundTasks(commands.Cog):
     # Check the status of all users in all guilds every 5 minutes
     @tasks.loop(seconds=300)
     async def check_users(self):
-        for guild in self.bot.guilds:
-            online = 0
-            offline = 0
-            dnd = 0
-            idle = 0
+        query = "SELECT * FROM online_channel"
+        result = db_conn(query)
 
-            for member in guild.members:
-                if member.status == discord.Status.online:
-                    online += 1
-                elif member.status == discord.Status.offline:
-                    offline += 1
-                elif member.status == discord.Status.dnd:
-                    dnd += 1
-                elif member.status == discord.Status.idle:
-                    idle += 1
-            
-            # TO DO: Dynamic channel instead of hardcoded channel id
-            channel = discord.utils.get(guild.channels, id=1295872523917070418)
-            if channel:
-                await channel.edit(name=f"Online: {online}")
+        if result != []:
+            for guild in result:
+                channel_id = guild[0]
+                guild_id = guild[1]
+
+                server = self.bot.get_guild(guild_id)
+
+                online = 0
+
+                for member in server.members:
+                    if member.status == discord.Status.online or member.status == discord.Status.dnd or member.status == discord.Status.idle:
+                        online += 1
+
+                
+                # TO DO: Dynamic channel instead of hardcoded channel id
+                channel = discord.utils.get(server.channels, id=channel_id)
+                if channel:
+                    await channel.edit(name=f"Online: {online}")
             
 
 async def setup(bot):
