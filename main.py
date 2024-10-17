@@ -5,6 +5,7 @@ from moderationtools import moderation
 from discord import app_commands
 from randomcommands.check_online import register_online
 from randomcommands.remindme import remindme_save
+from randomcommands.leveling import check_level, set_leveling_role
 
 intents = discord.Intents.default()
 intents.members = True
@@ -17,7 +18,7 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 @bot.event
 async def on_ready():
     print('syncing commands...')
-    await bot.tree.sync()
+    # await bot.tree.sync()
     print('commands synced')
     print('loading cogs...')
     await bot.load_extension('cogs.background_tasks')
@@ -117,5 +118,22 @@ async def slash_command(interaction: discord.Interaction, message: str, time_unt
 @bot.command()
 async def remindme(ctx, message, time_until):
     await remindme_save(ctx, message, time_until)
+
+@bot.tree.command(name="level", description="Check your level")
+async def slash_command(interaction: discord.Interaction):
+    await check_level(interaction)
+
+@bot.command()
+async def level(ctx):
+    await check_level(ctx)
+
+@bot.tree.command(name="level_role_add", description="Add a role to a level")
+@app_commands.describe(role="Mentions the role to add", level="The level to add the role to")
+async def slash_command(interaction: discord.Interaction, role: discord.Role, level: int):
+    await set_leveling_role(interaction, role, level)
+
+@bot.command()
+async def level_role_add(ctx, role: discord.Role, level: int):
+    await set_leveling_role(ctx, role, level)
 
 bot.run(token)
