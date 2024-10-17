@@ -21,6 +21,7 @@ async def on_ready():
     print('commands synced')
     print('loading cogs...')
     await bot.load_extension('cogs.background_tasks')
+    await bot.load_extension('cogs.leveling')
     print('cogs loaded')
     print(f'We have logged in as {bot.user}')
 
