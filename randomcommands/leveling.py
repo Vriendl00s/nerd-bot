@@ -167,7 +167,10 @@ def check_for_level_roles(ctx, new_level):
         lower_levels = [k for k in role_ids.keys() if k < new_level]
         
         if not lower_levels:
-            return role, None  # Return None if no lower level exists
+            if not role:
+                return None, None
+            else:
+                return role, None  # Return None if no lower level exists
         
         # Get the maximum of the lower levels
         closest_lower_level = max(lower_levels)
@@ -177,3 +180,16 @@ def check_for_level_roles(ctx, new_level):
         prev_role_id = ctx.guild.get_role(prev_role_id)
 
         return role, prev_role_id
+
+
+def show_level_roles(ctx):
+    role_ids = retrieve_level_roles(ctx)
+    if not role_ids:
+        return "No leveling roles have been set for this server."
+
+    roles = []
+    for level, role_id in role_ids.items():
+        role = ctx.guild.get_role(role_id)
+        roles.append(f"Level {level}: {role.mention}")
+
+    return "\n".join(roles)
