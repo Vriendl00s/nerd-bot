@@ -1,4 +1,3 @@
-import discord
 from moderationtools.moderation import check_admin
 from standardutils.reply import reply
 from db_connection import db_conn

@@ -1,8 +1,4 @@
 from db_connection import db_conn
-import discord
-import vacefron
-import random
-import math
 from discord.ext import commands
 from randomcommands import leveling
 

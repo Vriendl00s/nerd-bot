@@ -1,7 +1,6 @@
 from standardutils.get_author import get_author
 from db_connection import db_conn
 import vacefron
-from standardutils.reply import reply_file
 from discord import File
 import io
 import random

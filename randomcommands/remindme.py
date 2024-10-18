@@ -1,5 +1,4 @@
 import discord
-from discord.ext import commands
 from standardutils.reply import reply
 from standardutils.parsed_time import parsed_time
 from standardutils.get_author import get_author
