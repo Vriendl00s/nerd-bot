@@ -39,7 +39,7 @@ async def check_level(ctx):
 
     # Create a rank card using vacefron.
     rank_card = vacefron.Rankcard(
-        username=author.name,
+        username=author.display_name,
         avatar_url=author.avatar.url,
         level=level,
         current_xp=xp,
