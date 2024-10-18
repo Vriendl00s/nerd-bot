@@ -159,6 +159,8 @@ def retrieve_level_roles(ctx):
 def check_for_level_roles(ctx, new_level):
     role_ids = retrieve_level_roles(ctx)
 
+    if not role_ids:
+        return None, None
     if new_level in role_ids:
         role_id = role_ids[new_level]
         role = ctx.guild.get_role(role_id)
@@ -167,10 +169,7 @@ def check_for_level_roles(ctx, new_level):
         lower_levels = [k for k in role_ids.keys() if k < new_level]
         
         if not lower_levels:
-            if not role:
-                return None, None
-            else:
-                return role, None  # Return None if no lower level exists
+            return role, None  # Return None if no lower level exists
         
         # Get the maximum of the lower levels
         closest_lower_level = max(lower_levels)
