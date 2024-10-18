@@ -13,19 +13,20 @@ async def check_level(ctx):
     author = await get_author(ctx)
 
     # Query to get the user's XP and level from the database.
-    query = f"""SELECT xp, level 
+    query1 = f"""SELECT xp, level 
                 FROM levels 
                 WHERE user_id = {author.id} 
                 AND server_id = {ctx.guild.id}"""
     
-    result = db_conn(query)
+    result = db_conn(query1)
 
     # If the user does not exist in the database, insert them with default values.
     if result == []:
-        query = f"""INSERT INTO levels (user_id, server_id, xp, level)
+        query2 = f"""INSERT INTO levels (user_id, server_id, xp, level)
                     VALUES ({author.id}, {ctx.guild.id}, 0, 0)"""
         
-        db_conn(query, commit=True)
+        db_conn(query2, commit=True)
+        result = db_conn(query1) 
 
     level = result[0][1]
     xp = result[0][0]

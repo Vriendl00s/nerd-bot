@@ -25,5 +25,11 @@ conn.close()
 # clear_db = "DELETE FROM moderation"
 #ik db_conn(clear_db, commit=True)
 
-query = "UPDATE levels SET xp = 350, level = 1 WHERE user_id = 1026491248904785970 AND server_id = 1288971299909144648"
-db_conn(query, commit=True)
+# query = "UPDATE levels SET xp = 350, level = 1 WHERE user_id = 1026491248904785970 AND server_id = 1288971299909144648"
+# db_conn(query, commit=True)
+
+# query = "DELETE FROM leveling_roles"
+# db_conn(query, commit=True)
+
+# query = "DELETE FROM levels"
+# db_conn(query, commit=True)
